@@ -14,11 +14,63 @@ This repository contains the Docker configuration for ComfyUI with automatic mod
 - Edit `scripts/download-additional-models.sh` for additional models
 - Edit `scripts/install-custom-nodes.sh` for custom nodes
 
-## Models Included
+## Models & Custom Nodes Strategy
 
-- Flux VAE (ae.safetensors)
-- CLIP models (clip_l.safetensors, t5xxl_fp16.safetensors)
-- Flux UNET (flux1-dev-kontext_fp8_scaled.safetensors)
+### 🎯 **Comprehensive Base + Targeted Additions**
+Using `cu124-megapak` as a feature-rich foundation, then adding specific models and nodes.
+
+### 📦 **Pre-installed in Megapak Image**:
+**Models:**
+- **Flux Schnell**: flux1-schnell-fp8.safetensors (fast generation)
+- **SD VAE**: vae-ft-mse-840000-ema-pruned.safetensors (Stable Diffusion VAE)
+- **Upscale Models**: 4x_NMKD-Siax_200k.pth, 4x_foolhardy_Remacri.pth, 8x_NMKD-Superscale_150000_G.pth
+- **Embeddings**: EasyNegative.safetensors, ng_deepnegative_v1_75t.pt
+- **VAE Approx**: Multiple TAESD decoders for fast previews
+
+**Custom Nodes (30+):**
+- ComfyUI-Manager, Impact Pack, ControlNet Aux, IP-Adapter Plus, ReActor
+- AnimateDiff, VideoHelper, WAS Node Suite, Efficiency Nodes, KJNodes
+- Custom Scripts, rgthree-comfy, Essentials, Portrait Master, and many more
+
+### ⬇️ **Added by init-models.sh (Flux Completion)**:
+- **Flux VAE**: ae.safetensors (required for Flux models)
+- **CLIP Models**: clip_l.safetensors, t5xxl_fp16.safetensors (text encoders)
+- **Flux Dev**: flux1-dev-kontext_fp8_scaled.safetensors (higher quality than Schnell)
+
+### ⬇️ **Added by download-additional-models.sh (Extended Capabilities)**:
+- **SDXL Base**: sd_xl_base_1.0.safetensors (high-resolution generation)
+- **SDXL Refiner**: sd_xl_refiner_1.0.safetensors (detail enhancement)
+- **LCM LoRA**: pytorch_lora_weights.safetensors (fast SDXL generation)
+- **Real-ESRGAN**: RealESRGAN_x4plus.pth, RealESRGAN_x2plus.pth (high-quality upscaling)
+- **CLIP Vision**: pytorch_model.bin (image conditioning)
+- **SDXL VAE**: sdxl_vae.safetensors (SDXL compatibility)
+
+### 🔧 **Added by install-custom-nodes.sh (Workflow-Specific Nodes)**:
+- **ComfyUI-Logic**: Advanced logic and flow control
+- **Workflow-Component**: Modular workflow building
+- **BRIA_AI-RMBG**: Background removal capabilities
+- **Image-Filters**: Advanced image processing
+- **FluxTrainer**: Flux-specific training and utilities
+- **Flux-Prompt-Generator**: Enhanced prompt generation for Flux
+- **TiledKSampler**: Large image processing and upscaling
+- **Easy-Use**: Simplified workflow nodes
+
+### 🎯 **Workflow Support**:
+This setup is optimized for advanced Flux workflows including:
+- **Flux 1 Kontext Dev + Upscaler**: Complete support with all required models and nodes
+- **Image-to-Image**: Full Flux ecosystem with VAE, CLIP, and UNET models
+- **High-Resolution Generation**: SDXL models + advanced upscaling (Real-ESRGAN)
+- **Background Processing**: BRIA AI background removal + image filters
+- **Tiled Processing**: Large image handling with TiledKSampler
+- **Prompt Enhancement**: Flux-specific prompt generation tools
+
+### ✅ **Benefits of This Approach**:
+- **Comprehensive Base**: Start with 30+ nodes and essential models
+- **No Duplicates**: Smart addition of complementary models/nodes
+- **Best of Both**: Flux Schnell (fast) + Flux Dev (quality)
+- **Workflow Ready**: All dependencies for complex Flux workflows included
+- **Extended Capabilities**: SDXL for high-res, specialized nodes for advanced workflows
+- **Production Ready**: Megapak provides battle-tested node collection
 
 ## Deployment
 
@@ -59,8 +111,10 @@ This repository contains the Docker configuration for ComfyUI with automatic mod
 ## Configuration
 
 The setup includes:
-- **ComfyUI Manager**: Automatically installed for easy node management
-- **GPU Support**: NVIDIA GPU acceleration enabled
+- **Base Image**: `yanwk/comfyui-boot:cu124-megapak` (~24GB, comprehensive package)
+- **Pre-installed**: ComfyUI + 30+ custom nodes + essential models
+- **GPU Support**: NVIDIA GPU acceleration enabled (CUDA 12.4 + Python 3.12)
 - **Persistent Storage**: Models, outputs, and custom nodes are persisted
-- **Network Configuration**: Configured for Coolify with static IP
-- **Automatic Model Downloads**: Core Flux models downloaded on first run
+- **Network Configuration**: Configured for Coolify with static IP (10.0.1.9)
+- **Smart Additions**: Scripts add complementary models/nodes without conflicts
+- **Production Ready**: Battle-tested megapak base + your specific requirements
