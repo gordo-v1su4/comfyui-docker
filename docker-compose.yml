@@ -1,0 +1,38 @@
+services:
+  comfyui:
+    image: yanwk/comfyui-boot:cu124-megapak
+    container_name: comfyui
+    restart: unless-stopped
+    ports:
+      - "8188:8188"
+    volumes:
+      - './models:/app/ComfyUI/models'
+      - './user:/app/ComfyUI/user'
+      - './output:/app/ComfyUI/output'
+      - './custom_nodes:/app/ComfyUI/custom_nodes'
+      - './init-models.sh:/init-models.sh'
+      - './scripts:/scripts'
+    environment:
+      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --fast
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      coolify:
+        ipv4_address: 10.0.1.9
+    command: >
+      bash -c "
+        chmod +x /init-models.sh &&
+        chmod +x /scripts/*.sh &&
+        /init-models.sh &&
+        exec /app/start.sh
+      "
+
+networks:
+  coolify:
+    external: true
